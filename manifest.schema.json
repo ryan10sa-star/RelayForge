@@ -1,0 +1,71 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "RelayForge Tool Manifest",
+  "type": "object",
+  "required": [
+    "tool_id",
+    "name",
+    "version",
+    "maintainer",
+    "domain",
+    "capabilities",
+    "inputs",
+    "outputs",
+    "permission_scope",
+    "latency_target_ms",
+    "pricing",
+    "sandbox_supported",
+    "verification_status",
+    "last_audit_date",
+    "compatibility",
+    "rollback_available"
+  ],
+  "properties": {
+    "tool_id": {"type": "string", "pattern": "^[a-z0-9-]+$"},
+    "name": {"type": "string"},
+    "version": {"type": "string"},
+    "maintainer": {
+      "type": "object",
+      "required": ["name", "contact"],
+      "properties": {
+        "name": {"type": "string"},
+        "contact": {"type": "string"},
+        "response_sla_hours": {"type": "number"}
+      }
+    },
+    "domain": {"type": "string"},
+    "capabilities": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "inputs": {
+      "type": "object",
+      "description": "JSON Schema describing input payload"
+    },
+    "outputs": {
+      "type": "object",
+      "description": "JSON Schema describing output payload"
+    },
+    "permission_scope": {"type": "string"},
+    "latency_target_ms": {"type": "number"},
+    "pricing": {
+      "type": "object",
+      "required": ["model"],
+      "properties": {
+        "model": {"type": "string", "enum": ["per_call", "per_minute", "subscription"]},
+        "unit_price": {"type": "number"},
+        "free_tier_calls": {"type": "number"}
+      }
+    },
+    "sandbox_supported": {"type": "boolean"},
+    "sandbox_details": {"type": "string"},
+    "verification_status": {"type": "string", "enum": ["unverified", "submitted", "relayforge_verified"]},
+    "last_audit_date": {"type": "string", "format": "date"},
+    "compatibility": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "rollback_available": {"type": "boolean"},
+    "notes": {"type": "string"}
+  }
+}
