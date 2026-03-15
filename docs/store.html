@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RelayForge Store — I&E Field Tools & Resources</title>
+  <meta name="description" content="Field-tested I&E tools and resources. Built by a 20-year refinery tech. Calibration software, bilingual field guides, exam prep, and troubleshooting protocols." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --yellow: #FCE300;
+      --bg: #0d0d0d;
+      --bg-2: #141414;
+      --bg-3: #1a1a1a;
+      --bg-4: #222222;
+      --border: #2a2a2a;
+      --border-bright: #3a3a3a;
+      --text: #e8e8e8;
+      --text-dim: #888;
+      --text-muted: #555;
+      --green: #00d26a;
+      --teal: #1A8C8C;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px);
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* NAV */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(13,13,13,0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 56px;
+    }
+    .nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; letter-spacing: 0.08em; color: var(--text); text-decoration: none; }
+    .nav-logo span { color: var(--yellow); }
+    .nav-links { display: flex; gap: 2rem; list-style: none; align-items: center; }
+    .nav-links a { font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); text-decoration: none; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--yellow); }
+
+    /* HERO */
+    .store-hero {
+      padding: 5rem 2rem 3rem;
+      max-width: 1100px; margin: 0 auto;
+      position: relative;
+    }
+    .store-eyebrow {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--yellow); margin-bottom: 1rem;
+      display: flex; align-items: center; gap: 0.75rem;
+    }
+    .store-eyebrow::before { content: ''; display: inline-block; width: 24px; height: 1px; background: var(--yellow); }
+    .store-hero h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3rem, 8vw, 6rem);
+      line-height: 0.92; letter-spacing: 0.02em;
+      margin-bottom: 1.25rem;
+    }
+    .store-hero h1 em { font-style: normal; color: var(--yellow); display: block; }
+    .store-hero p { color: var(--text-dim); max-width: 520px; font-size: 1.05rem; line-height: 1.7; }
+
+    /* SECTION LABELS */
+    .section-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--yellow); margin-bottom: 1rem;
+      display: flex; align-items: center; gap: 0.6rem;
+    }
+    .section-label::before { content: ''; display: inline-block; width: 16px; height: 1px; background: var(--yellow); }
+
+    .divider { border: none; border-top: 1px solid var(--border); margin: 0; }
+
+    /* SECTIONS */
+    section { padding: 4rem 2rem; max-width: 1100px; margin: 0 auto; }
+
+    /* FEATURED — LOOPVAULT */
+    .featured-card {
+      background: var(--bg-2);
+      border: 1px solid var(--border-bright);
+      position: relative; overflow: hidden;
+      padding: 3rem;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 3rem;
+      align-items: center;
+    }
+    .featured-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: var(--yellow);
+    }
+    .featured-badge {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.65rem; letter-spacing: 0.14em; text-transform: uppercase;
+      color: #000; background: var(--yellow);
+      padding: 0.3rem 0.8rem; margin-bottom: 1.25rem;
+      clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px));
+    }
+    .featured-card h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      line-height: 0.92; letter-spacing: 0.02em;
+      margin-bottom: 1rem;
+    }
+    .featured-card h2 span { color: var(--yellow); }
+    .featured-card p { color: var(--text-dim); line-height: 1.7; margin-bottom: 1.5rem; }
+    .featured-price {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 1.4rem; font-weight: 600;
+      color: var(--yellow); margin-bottom: 0.4rem;
+    }
+    .featured-price-note {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--text-muted); margin-bottom: 1.5rem;
+    }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.9rem 2rem;
+      background: var(--yellow); color: #000;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.8rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+      text-decoration: none; border: none; cursor: pointer;
+      transition: all 0.15s;
+      clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+    }
+    .btn-primary:hover { background: #fff; transform: translateY(-1px); box-shadow: 0 4px 20px rgba(252,227,0,0.3); }
+    .btn-secondary {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.9rem 2rem;
+      background: transparent; color: var(--text);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.8rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
+      text-decoration: none; border: 1px solid var(--border-bright); cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-secondary:hover { border-color: var(--yellow); color: var(--yellow); }
+
+    .featured-features { list-style: none; }
+    .featured-features li {
+      display: flex; align-items: flex-start; gap: 0.75rem;
+      padding: 0.6rem 0; border-bottom: 1px solid var(--border);
+      font-size: 0.95rem; color: var(--text-dim);
+    }
+    .featured-features li:last-child { border-bottom: none; }
+    .featured-features li::before { content: '◈'; color: var(--yellow); font-size: 0.7rem; margin-top: 0.3rem; flex-shrink: 0; }
+
+    /* BUNDLE */
+    .bundle-card {
+      background: var(--bg-3);
+      border: 1px solid var(--teal);
+      padding: 2.5rem;
+      display: grid; grid-template-columns: 1fr auto; gap: 2rem; align-items: center;
+      margin-bottom: 3rem;
+    }
+    .bundle-tag {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.65rem; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--teal); border: 1px solid var(--teal);
+      padding: 0.25rem 0.6rem; display: inline-block; margin-bottom: 1rem;
+    }
+    .bundle-card h3 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2rem; letter-spacing: 0.04em; margin-bottom: 0.75rem;
+    }
+    .bundle-card p { color: var(--text-dim); max-width: 600px; line-height: 1.7; margin-bottom: 1rem; }
+    .bundle-includes {
+      display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0;
+    }
+    .bundle-item {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.62rem; letter-spacing: 0.08em;
+      background: var(--bg-4); border: 1px solid var(--border-bright);
+      padding: 0.25rem 0.6rem; color: var(--text-dim);
+    }
+    .bundle-price-block { text-align: right; flex-shrink: 0; }
+    .bundle-price {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 3rem; color: var(--yellow); line-height: 1;
+    }
+    .bundle-price-note {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--text-muted); margin-bottom: 1rem; display: block;
+    }
+
+    /* PRODUCT GRID */
+    .products-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+    .product-card {
+      background: var(--bg-2); border: 1px solid var(--border);
+      padding: 1.75rem; position: relative;
+      transition: border-color 0.2s;
+      display: flex; flex-direction: column;
+    }
+    .product-card:hover { border-color: var(--border-bright); }
+    .product-card-corner {
+      position: absolute; top: 0; right: 0;
+      width: 0; height: 0;
+      border-style: solid; border-width: 0 20px 20px 0;
+      border-color: transparent var(--border-bright) transparent transparent;
+    }
+    .product-lang {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--text-muted); margin-bottom: 0.75rem;
+    }
+    .product-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.4rem; letter-spacing: 0.04em;
+      margin-bottom: 0.75rem; line-height: 1.1;
+    }
+    .product-desc { font-size: 0.88rem; color: var(--text-dim); line-height: 1.6; margin-bottom: 1.25rem; flex: 1; }
+    .product-price { font-family: 'IBM Plex Mono', monospace; font-size: 1rem; font-weight: 600; color: var(--yellow); margin-bottom: 1rem; }
+    .product-price.free { color: var(--green); }
+    .product-cta {
+      display: block; text-align: center;
+      padding: 0.65rem 1.25rem;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+      text-decoration: none; transition: all 0.15s;
+    }
+    .product-cta.primary { background: var(--yellow); color: #000; }
+    .product-cta.primary:hover { background: #fff; }
+    .product-cta.secondary { border: 1px solid var(--border-bright); color: var(--text-dim); }
+    .product-cta.secondary:hover { border-color: var(--yellow); color: var(--yellow); }
+
+    /* GROUP SALES */
+    .group-strip {
+      background: var(--bg-2); border: 1px solid var(--border);
+      padding: 2.5rem; margin: 0 2rem;
+    }
+    .group-strip h3 { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; letter-spacing: 0.04em; margin-bottom: 0.5rem; }
+    .group-strip p { color: var(--text-dim); max-width: 600px; line-height: 1.7; }
+    .group-tiers { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+    .group-tier { background: var(--bg-3); border: 1px solid var(--border); padding: 1.25rem; }
+    .group-tier-name { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--yellow); margin-bottom: 0.4rem; }
+    .group-tier-price { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; line-height: 1; margin-bottom: 0.4rem; }
+    .group-tier-desc { font-size: 0.82rem; color: var(--text-dim); }
+
+    /* FOOTER */
+    footer { border-top: 1px solid var(--border); padding: 2rem; margin-top: 4rem; }
+    .footer-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+    .footer-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; letter-spacing: 0.08em; }
+    .footer-logo span { color: var(--yellow); }
+    .footer-links { display: flex; gap: 1.5rem; list-style: none; flex-wrap: wrap; }
+    .footer-links a { font-family: 'IBM Plex Mono', monospace; font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--yellow); }
+    .footer-credit { font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; color: var(--text-muted); }
+
+    @media (max-width: 768px) {
+      .featured-card { grid-template-columns: 1fr; }
+      .bundle-card { grid-template-columns: 1fr; }
+      .bundle-price-block { text-align: left; }
+      nav { padding: 0 1rem; }
+      .nav-links { gap: 1rem; }
+      section { padding: 3rem 1rem; }
+      .store-hero { padding: 3rem 1rem 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a class="nav-logo" href="/">Relay<span>Forge</span></a>
+    <ul class="nav-links">
+      <li><a href="/">Home</a></li>
+      <li><a href="#software">Software</a></li>
+      <li><a href="#field-guides">Field Guides</a></li>
+      <li><a href="#group">Group Sales</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <div class="store-hero">
+    <div class="store-eyebrow">Product Storefront</div>
+    <h1>Field Tools.<br><em>Built for the Field.</em></h1>
+    <p>Every product here was built by a working I&E tech with 20 years in refineries. Not textbook theory. Not AI slop. The real tools, the real words, the real math.</p>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- LOOPVAULT FEATURED -->
+  <section id="software">
+    <p class="section-label">Software</p>
+
+    <div class="featured-card">
+      <div>
+        <div class="featured-badge">◈ Founding Members Open</div>
+        <h2>Loop<span>Vault</span></h2>
+        <p>Offline-first calibration and commissioning assistant. Tag management, 5-point calibration jobs, evidence photos, signature capture, PDF cert generation, and cloud sync. Works on any tablet. No app store required.</p>
+        <div class="featured-price">$4 / month</div>
+        <div class="featured-price-note">Founding member rate · First 20 only · Locked in forever · $19/mo after</div>
+        <a href="https://cci.lemonsqueezy.com/checkout/buy/b1b9ca27-96e6-41a0-8945-a0983d095044" class="btn-primary" target="_blank" rel="noopener">→ Join Beta — $4/mo</a>
+      </div>
+      <ul class="featured-features">
+        <li>Offline-first PWA — works without network</li>
+        <li>5-point calibration jobs with as-found / as-left</li>
+        <li>PDF calibration certificates on device</li>
+        <li>Evidence photo and signature capture</li>
+        <li>Cloud sync via site code — crew stays aligned</li>
+        <li>ZIP backup — store anywhere</li>
+        <li>Installs direct from browser — no app store</li>
+        <li>Supabase-backed — your data is yours</li>
+      </ul>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- BUNDLE -->
+  <section id="bundle">
+    <p class="section-label">Best Value</p>
+
+    <div class="bundle-card">
+      <div>
+        <div class="bundle-tag">◈ Complete Pack</div>
+        <h3>The Complete I&E Field Pack</h3>
+        <p>Everything a working instrumentation tech needs in one download. 10-section troubleshooting guide, bilingual field guides in three languages, full exam prep, and field cheat sheets. Built by a 20-year refinery I&E tech. Print it, load it on a tablet, hand it to your crew.</p>
+        <div class="bundle-includes">
+          <span class="bundle-item">Troubleshooting Guide (10 sections)</span>
+          <span class="bundle-item">Bilingual Guide — Spanish</span>
+          <span class="bundle-item">Bilingual Guide — Portuguese</span>
+          <span class="bundle-item">Bilingual Guide — Hindi</span>
+          <span class="bundle-item">Exam Prep (NCCER · ISA CCST)</span>
+          <span class="bundle-item">Cheat Sheets × 3</span>
+        </div>
+      </div>
+      <div class="bundle-price-block">
+        <div class="bundle-price">$89</div>
+        <span class="bundle-price-note">One-time · Instant download</span>
+        <a href="https://cci.lemonsqueezy.com/checkout/buy/282acedc-82b3-4be1-bc60-198f13b57df7" class="btn-primary" target="_blank" rel="noopener">→ Get the Full Pack</a>
+      </div>
+    </div>
+
+  <!-- FIELD GUIDES -->
+  <p class="section-label" id="field-guides">Field Guides & Resources</p>
+  <div class="products-grid">
+
+    <div class="product-card">
+      <div class="product-card-corner"></div>
+      <div class="product-lang">Troubleshooting</div>
+      <div class="product-name">Industrial Troubleshooting Field Guide</div>
+      <div class="product-desc">10 sections covering the full diagnostic spine. Voltage and milliamp checks, device end, wiring faults, noise, power distribution, final elements, and process sanity. Safety gates, symptom routing table, and field log template.</div>
+      <div class="product-price">$49.99</div>
+      <a href="https://cci.lemonsqueezy.com/checkout/buy/d9bfae7e-d347-4255-9e2f-90136d723bf7" class="product-cta primary" target="_blank" rel="noopener">→ Get the Guide</a>
+    </div>
+
+    <div class="product-card">
+      <div class="product-card-corner"></div>
+      <div class="product-lang">Exam Prep</div>
+      <div class="product-name">Industrial Instrument Exam Prep</div>
+      <div class="product-desc">NCCER · ISA CCST · Employer tests. Test logic drills, speed math, diagram recognition, controller action, and a timed mini-exam with full answer key. Built to stop giving away points.</div>
+      <div class="product-price">$19.99</div>
+      <a href="https://cci.lemonsqueezy.com/checkout/buy/70457378-d525-4ef4-b504-724ca9f4e800" class="product-cta primary" target="_blank" rel="noopener">→ Get Exam Prep</a>
+    </div>
+
+    <div class="product-card">
+      <div class="product-card-corner"></div>
+      <div class="product-lang">English ↔ Spanish</div>
+      <div class="product-name">Bilingual Trade Terms Field Guide</div>
+      <div class="product-desc">Side-by-side format for mixed crews and pre-job safety briefs. Safety-critical terms first. LOTO, arc flash, 4–20 mA loop, calibration, valves, and the top 25 jobsite phrases.</div>
+      <div class="product-price">$24.99</div>
+      <a href="https://cci.lemonsqueezy.com/checkout/buy/c63d0c7e-2cf9-41e9-958b-4346eadb856b" class="product-cta primary" target="_blank" rel="noopener">→ Get Spanish Guide</a>
+    </div>
+
+    <div class="product-card">
+      <div class="product-card-corner"></div>
+      <div class="product-lang">English ↔ Portuguese</div>
+      <div class="product-name">Bilingual Trade Terms Field Guide</div>
+      <div class="product-desc">Side-by-side format for mixed crews and pre-job safety briefs. Safety-critical terms first. LOTO, arc flash, 4–20 mA loop, calibration, valves, and the top 25 jobsite phrases.</div>
+      <div class="product-price">$24.99</div>
+      <a href="https://cci.lemonsqueezy.com/checkout/buy/3094080f-ea43-4775-bb5f-2c2e7772d6ae" class="product-cta primary" target="_blank" rel="noopener">→ Get Portuguese Guide</a>
+    </div>
+
+    <div class="product-card">
+      <div class="product-card-corner"></div>
+      <div class="product-lang">English ↔ Hindi</div>
+      <div class="product-name">Bilingual Trade Terms Field Guide</div>
+      <div class="product-desc">Side-by-side format for mixed crews and pre-job safety briefs. Safety-critical terms first. LOTO, arc flash, 4–20 mA loop, calibration, valves, and the top 25 jobsite phrases.</div>
+      <div class="product-price">$24.99</div>
+      <a href="https://cci.lemonsqueezy.com/checkout/buy/15632fea-4f31-4bf4-80f6-d3cd02e30b1a" class="product-cta primary" target="_blank" rel="noopener">→ Get Hindi Guide</a>
+    </div>
+
+    <div class="product-card">
+      <div class="product-card-corner"></div>
+      <div class="product-lang">English ↔ Spanish · Cheat Sheet</div>
+      <div class="product-name">Industrial Jobsite Cheat Sheet</div>
+      <div class="product-desc">Top field phrases, read-back format. Built for the radio, not the classroom. Pre-job safety brief checklist, shift handoff format, stop-work phrases.</div>
+      <div class="product-price">$0.00+</div>
+      <a href="https://cci.lemonsqueezy.com/checkout/buy/ab1e07a8-a3a5-4d02-83fe-7433fec4103a" class="product-cta secondary" target="_blank" rel="noopener">→ Get Spanish Sheet</a>
+    </div>
+
+    <div class="product-card">
+      <div class="product-card-corner"></div>
+      <div class="product-lang">English ↔ Portuguese · Cheat Sheet</div>
+      <div class="product-name">Industrial Jobsite Cheat Sheet</div>
+      <div class="product-desc">Top field phrases, read-back format. Built for the radio, not the classroom. Pre-job safety brief checklist, shift handoff format, stop-work phrases.</div>
+      <div class="product-price">$0.00+</div>
+      <a href="https://cci.lemonsqueezy.com/checkout/buy/61e5171b-e15f-4509-8068-d811e2e5f0cb" class="product-cta secondary" target="_blank" rel="noopener">→ Get Portuguese Sheet</a>
+    </div>
+
+    <div class="product-card">
+      <div class="product-card-corner"></div>
+      <div class="product-lang">English ↔ Hindi · Cheat Sheet</div>
+      <div class="product-name">Industrial Jobsite Cheat Sheet</div>
+      <div class="product-desc">Top field phrases, read-back format. Built for the radio, not the classroom. Pre-job safety brief checklist, shift handoff format, stop-work phrases.</div>
+      <div class="product-price">$0.00+</div>
+      <a href="https://cci.lemonsqueezy.com/checkout/buy/ac69aa1a-9558-447b-98a4-5c08079fac51" class="product-cta secondary" target="_blank" rel="noopener">→ Get Hindi Sheet</a>
+    </div>
+
+  </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- GROUP SALES -->
+  <div class="group-strip" id="group">
+    <p class="section-label">Group & Site Licensing</p>
+    <h3>Running a Crew or Managing a Plant?</h3>
+    <p>LoopVault is built for that. Each facility gets its own site code — your data stays separate, your techs stay synced, and your supervisor can pull from the cloud without touching anyone else's records.</p>
+    <div class="group-tiers">
+      <div class="group-tier">
+        <div class="group-tier-name">Field Tech</div>
+        <div class="group-tier-price">$19<span style="font-size:1rem;font-family:'IBM Plex Mono',monospace">/mo</span></div>
+        <div class="group-tier-desc">Single tech. Full LoopVault access.</div>
+      </div>
+      <div class="group-tier">
+        <div class="group-tier-name">Crew</div>
+        <div class="group-tier-price">$49<span style="font-size:1rem;font-family:'IBM Plex Mono',monospace">/mo</span></div>
+        <div class="group-tier-desc">Up to 5 techs. One site code. Shared tag library.</div>
+      </div>
+      <div class="group-tier">
+        <div class="group-tier-name">Site License</div>
+        <div class="group-tier-price">$199<span style="font-size:1rem;font-family:'IBM Plex Mono',monospace">/mo</span></div>
+        <div class="group-tier-desc">Unlimited techs. One facility. Full sync.</div>
+      </div>
+    </div>
+    <a href="mailto:ryan@relayforge.tools" class="btn-secondary">→ Contact for Group Pricing</a>
+  </div>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-logo">Relay<span>Forge</span></div>
+      <ul class="footer-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="https://github.com/ryan10sa-star/RelayForge" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="https://www.youtube.com/@CRASHCOURSEINSTRUMENTATION" target="_blank" rel="noopener">YouTube</a></li>
+        <li><a href="https://www.linkedin.com/in/ryan-anderson-2a583a39/" target="_blank" rel="noopener">LinkedIn</a></li>
+      </ul>
+      <div class="footer-credit">Built by Ryan &amp; Sheldon · © 2026 RelayForge</div>
+    </div>
+  </footer>
+
+</body>
+</html>
