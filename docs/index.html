@@ -3,55 +3,1001 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RelayForge — Trusted MCP tools for agents</title>
+  <title>RelayForge — Trusted MCP Tools for Agents</title>
+  <meta name="description" content="A vendor-neutral registry for verified A2A/MCP tools. Trust signals, safe sandboxing, transparent criteria. Built by people who stand next to the valve." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+ 
   <style>
-    body { font-family: 'Inter', Arial, sans-serif; background:#0f1115; color:#f5f5f5; margin:0; padding:0; }
-    .hero { padding:80px 24px; max-width:960px; margin:0 auto; }
-    h1 { font-size:3rem; margin-bottom:1rem; }
-    p.lead { font-size:1.25rem; color:#b5bcc6; }
-    .panel { background:#181c22; border:1px solid #272c35; border-radius:12px; padding:24px; margin-top:32px; }
-    .panel h2 { margin-top:0; }
-    .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px; }
-    .metric { background:#10131a; border:1px solid #1f2530; border-radius:10px; padding:16px; }
-    footer { padding:24px; text-align:center; color:#7d8592; font-size:0.9rem; }
+    :root {
+      --yellow: #FCE300;
+      --yellow-dim: #b8a500;
+      --bg: #0d0d0d;
+      --bg-2: #141414;
+      --bg-3: #1a1a1a;
+      --bg-4: #222222;
+      --border: #2a2a2a;
+      --border-bright: #3a3a3a;
+      --text: #e8e8e8;
+      --text-dim: #888;
+      --text-muted: #555;
+      --red: #ff3b3b;
+      --green: #00d26a;
+    }
+ 
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+ 
+    html { scroll-behavior: smooth; }
+ 
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+ 
+    /* ─── SCAN LINES ─── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,0.08) 2px,
+        rgba(0,0,0,0.08) 4px
+      );
+      pointer-events: none;
+      z-index: 9999;
+    }
+ 
+    /* ─── NAV ─── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(13,13,13,0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 56px;
+    }
+ 
+    .nav-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.6rem;
+      letter-spacing: 0.08em;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .nav-logo span { color: var(--yellow); }
+ 
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+      align-items: center;
+    }
+    .nav-links a {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--yellow); }
+ 
+    /* ─── HERO ─── */
+    .hero {
+      position: relative;
+      min-height: 92vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 6rem 2rem 4rem;
+      overflow: hidden;
+    }
+ 
+    /* Grid background */
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(252,227,0,0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(252,227,0,0.035) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 40%, black 40%, transparent 100%);
+    }
+ 
+    /* Corner decorations */
+    .hero-corner {
+      position: absolute;
+      width: 80px;
+      height: 80px;
+      border-color: var(--yellow);
+      border-style: solid;
+      opacity: 0.4;
+    }
+    .hero-corner.tl { top: 2rem; left: 2rem; border-width: 2px 0 0 2px; }
+    .hero-corner.tr { top: 2rem; right: 2rem; border-width: 2px 2px 0 0; }
+    .hero-corner.bl { bottom: 2rem; left: 2rem; border-width: 0 0 2px 2px; }
+    .hero-corner.br { bottom: 2rem; right: 2rem; border-width: 0 2px 2px 0; }
+ 
+    .hero-eyebrow {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--yellow);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      display: inline-block;
+      width: 24px;
+      height: 1px;
+      background: var(--yellow);
+    }
+ 
+    .hero h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(4rem, 12vw, 9rem);
+      line-height: 0.9;
+      letter-spacing: 0.02em;
+      margin-bottom: 1.5rem;
+      max-width: 900px;
+    }
+ 
+    .hero h1 em {
+      font-style: normal;
+      color: var(--yellow);
+      display: block;
+    }
+ 
+    .hero-sub {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      color: var(--text-dim);
+      max-width: 520px;
+      margin-bottom: 3rem;
+      line-height: 1.7;
+    }
+ 
+    .hero-ctas {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+ 
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.9rem 2rem;
+      background: var(--yellow);
+      color: #000;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: all 0.15s;
+      clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+    }
+    .btn-primary:hover {
+      background: #fff;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 20px rgba(252,227,0,0.3);
+    }
+ 
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.9rem 2rem;
+      background: transparent;
+      color: var(--text);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border: 1px solid var(--border-bright);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-secondary:hover {
+      border-color: var(--yellow);
+      color: var(--yellow);
+    }
+ 
+    /* ─── STATUS BAR ─── */
+    .status-bar {
+      background: var(--bg-2);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 0.75rem 2rem;
+      display: flex;
+      gap: 2.5rem;
+      overflow-x: auto;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+    .status-item { display: flex; align-items: center; gap: 0.5rem; }
+    .dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .dot.green { background: var(--green); box-shadow: 0 0 6px var(--green); animation: pulse 2s ease-in-out infinite; }
+    .dot.yellow { background: var(--yellow); }
+    .dot.gray { background: var(--text-muted); }
+ 
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+ 
+    /* ─── SECTIONS ─── */
+    section { padding: 6rem 2rem; max-width: 1100px; margin: 0 auto; }
+ 
+    .section-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--yellow);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .section-label::before {
+      content: '';
+      display: inline-block;
+      width: 16px; height: 1px;
+      background: var(--yellow);
+    }
+ 
+    /* ─── PROBLEM ─── */
+    .problem-block {
+      border-left: 2px solid var(--yellow);
+      padding-left: 2rem;
+    }
+ 
+    .problem-block p {
+      font-size: clamp(1.3rem, 3vw, 1.9rem);
+      font-weight: 500;
+      line-height: 1.5;
+      color: var(--text);
+      margin-bottom: 1.25rem;
+    }
+ 
+    .problem-block p:last-child { margin-bottom: 0; }
+ 
+    .problem-block p strong {
+      color: var(--yellow);
+      font-weight: 600;
+    }
+ 
+    .problem-block p.dim {
+      color: var(--text-dim);
+      font-size: clamp(1rem, 2vw, 1.3rem);
+    }
+ 
+    /* ─── VERIFICATION CRITERIA ─── */
+    .criteria-grid {
+      display: grid;
+      gap: 0;
+      border: 1px solid var(--border);
+    }
+ 
+    .criterion {
+      display: grid;
+      grid-template-columns: 64px 1fr;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.15s;
+    }
+    .criterion:last-child { border-bottom: none; }
+    .criterion:hover { background: var(--bg-2); }
+ 
+    .criterion-number {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 1.75rem 0;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2rem;
+      color: var(--yellow);
+      border-right: 1px solid var(--border);
+    }
+ 
+    .criterion-content {
+      padding: 1.75rem 2rem;
+    }
+ 
+    .criterion-title {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text);
+      margin-bottom: 0.4rem;
+    }
+ 
+    .criterion-desc {
+      font-size: 0.9rem;
+      color: var(--text-dim);
+      line-height: 1.6;
+    }
+ 
+    /* ─── BADGE ─── */
+    .badge-showcase {
+      margin-top: 3rem;
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+ 
+    .rf-badge {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1rem 1.5rem;
+      background: var(--bg-2);
+      border: 2px solid var(--yellow);
+      gap: 0.3rem;
+      position: relative;
+    }
+ 
+    .rf-badge::before {
+      content: '';
+      position: absolute;
+      inset: 3px;
+      border: 1px solid rgba(252,227,0,0.2);
+      pointer-events: none;
+    }
+ 
+    .rf-badge-top {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.55rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--yellow);
+    }
+ 
+    .rf-badge-main {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.1rem;
+      letter-spacing: 0.15em;
+      color: var(--text);
+    }
+ 
+    .rf-badge-bottom {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.5rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+ 
+    .badge-explanation {
+      font-size: 0.9rem;
+      color: var(--text-dim);
+      max-width: 360px;
+      line-height: 1.7;
+    }
+    .badge-explanation strong { color: var(--text); }
+ 
+    /* ─── PRODUCTS ─── */
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+ 
+    .product-card {
+      background: var(--bg-2);
+      padding: 2rem;
+      position: relative;
+      transition: background 0.15s;
+      display: flex;
+      flex-direction: column;
+    }
+    .product-card:hover { background: var(--bg-3); }
+ 
+    .product-status {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .product-status.live { color: var(--green); }
+    .product-status.beta { color: var(--yellow); }
+    .product-status.soon { color: var(--text-muted); }
+ 
+    .product-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.8rem;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.75rem;
+      line-height: 1;
+    }
+ 
+    .product-desc {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      line-height: 1.6;
+      flex: 1;
+      margin-bottom: 1.5rem;
+    }
+ 
+    .product-price {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--yellow);
+    }
+ 
+    .product-price.free { color: var(--green); }
+ 
+    .product-corner {
+      position: absolute;
+      top: 1rem; right: 1rem;
+      width: 20px; height: 20px;
+      border-top: 1px solid var(--border-bright);
+      border-right: 1px solid var(--border-bright);
+    }
+ 
+    .product-cta {
+      display: block;
+      width: 100%;
+      text-align: center;
+      margin-top: 1.5rem;
+      justify-content: center;
+    }
+ 
+    /* ─── ORIGIN STORY ─── */
+    .origin-strip {
+      background: var(--bg-2);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 4rem 2rem;
+    }
+ 
+    .origin-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 4rem;
+      align-items: center;
+    }
+ 
+    .origin-label-block {
+      position: relative;
+    }
+ 
+    .origin-heading {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 3.5rem;
+      line-height: 0.95;
+      letter-spacing: 0.04em;
+    }
+    .origin-heading em {
+      display: block;
+      font-style: normal;
+      color: var(--yellow);
+    }
+ 
+    .origin-text p {
+      font-size: 1.05rem;
+      color: var(--text-dim);
+      line-height: 1.8;
+      margin-bottom: 1.25rem;
+    }
+    .origin-text p:last-child { margin-bottom: 0; }
+    .origin-text strong { color: var(--text); font-weight: 500; }
+ 
+    blockquote {
+      border-left: 3px solid var(--yellow);
+      padding-left: 1.5rem;
+      margin: 2rem 0;
+    }
+ 
+    blockquote p {
+      font-style: italic;
+      color: var(--text) !important;
+      font-size: 1rem !important;
+    }
+ 
+    blockquote cite {
+      display: block;
+      margin-top: 0.75rem;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--yellow);
+      font-style: normal;
+    }
+ 
+    /* ─── WAITLIST ─── */
+    .waitlist-section {
+      text-align: center;
+      padding: 6rem 2rem;
+    }
+ 
+    .waitlist-section h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      letter-spacing: 0.04em;
+      margin-bottom: 1rem;
+    }
+ 
+    .waitlist-section p {
+      color: var(--text-dim);
+      margin-bottom: 2.5rem;
+      font-size: 1.05rem;
+    }
+ 
+    .waitlist-form {
+      display: flex;
+      gap: 0;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+ 
+    .waitlist-form input {
+      flex: 1;
+      padding: 0.9rem 1.25rem;
+      background: var(--bg-2);
+      border: 1px solid var(--border-bright);
+      border-right: none;
+      color: var(--text);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.85rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .waitlist-form input:focus { border-color: var(--yellow); }
+    .waitlist-form input::placeholder { color: var(--text-muted); }
+ 
+    .waitlist-form button {
+      padding: 0.9rem 1.5rem;
+      background: var(--yellow);
+      color: #000;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border: none;
+      cursor: pointer;
+      transition: background 0.15s;
+      white-space: nowrap;
+    }
+    .waitlist-form button:hover { background: #fff; }
+ 
+    .waitlist-note {
+      margin-top: 1rem;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+    }
+ 
+    /* ─── FOOTER ─── */
+    footer {
+      background: var(--bg-2);
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 2rem;
+    }
+ 
+    .footer-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: gap;
+      gap: 1.5rem;
+    }
+ 
+    .footer-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.4rem;
+      letter-spacing: 0.08em;
+      color: var(--text-dim);
+    }
+    .footer-logo span { color: var(--yellow); }
+ 
+    .footer-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+    .footer-links a {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .footer-links a:hover { color: var(--yellow); }
+ 
+    .footer-credit {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+    }
+ 
+    /* ─── ANIMATIONS ─── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+ 
+    .hero-eyebrow { animation: fadeUp 0.5s ease both; }
+    .hero h1 { animation: fadeUp 0.5s 0.1s ease both; }
+    .hero-sub { animation: fadeUp 0.5s 0.2s ease both; }
+    .hero-ctas { animation: fadeUp 0.5s 0.3s ease both; }
+ 
+    /* ─── DIVIDER ─── */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+ 
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 768px) {
+      nav { padding: 0 1.25rem; }
+      .nav-links { display: none; }
+      section { padding: 4rem 1.25rem; }
+      .origin-inner { grid-template-columns: 1fr; gap: 2rem; }
+      .status-bar { padding: 0.75rem 1.25rem; }
+      .hero { padding: 5rem 1.25rem 3rem; }
+      .hero-corner { display: none; }
+      .waitlist-form { flex-direction: column; }
+      .waitlist-form input { border-right: 1px solid var(--border-bright); border-bottom: none; }
+      .footer-inner { flex-direction: column; align-items: flex-start; }
+      .footer-links { flex-wrap: wrap; gap: 1rem; }
+    }
   </style>
 </head>
 <body>
-  <section class="hero">
-    <h1>Trusted MCP tools for agents</h1>
-    <p class="lead">RelayForge helps agents and their operators discover, test, and use verified tools with transparent trust signals and safe sandboxing.</p>
-    <div class="panel">
-      <h2>Trust Panel (sample)</h2>
-      <div class="grid">
-        <div class="metric">
-          <strong>Verification</strong>
-          <div>✅ RelayForge Verified</div>
+ 
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="#">Relay<span>Forge</span></a>
+    <ul class="nav-links">
+      <li><a href="/store.html">Store</a></li>
+      <li><a href="#criteria">Trust Criteria</a></li>
+      <li><a href="#products">Products</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="https://loop-vault-web.replit.app" target="_blank" rel="noopener">LoopVault App</a></li>
+      <li><a href="#waitlist" style="color: var(--yellow);">Join Waitlist</a></li>
+    </ul>
+  </nav>
+ 
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-corner tl"></div>
+    <div class="hero-corner tr"></div>
+    <div class="hero-corner bl"></div>
+    <div class="hero-corner br"></div>
+ 
+    <p class="hero-eyebrow">Trusted MCP Tools for Agents</p>
+ 
+    <h1>
+      The Trust Layer<br>
+      <em>Agents Need.</em>
+    </h1>
+ 
+    <p class="hero-sub">
+      RelayForge helps agents and their operators discover, test, and use
+      verified tools — with transparent trust signals and safe sandboxing.
+      Vendor-neutral. Security-first. Built by people who've stood next to the valve.
+    </p>
+ 
+    <div class="hero-ctas">
+      <a href="#waitlist" class="btn-primary">→ Join the Waitlist</a>
+      <a href="#submit" class="btn-secondary">Submit a Tool</a>
+    </div>
+  </div>
+ 
+  <!-- STATUS BAR -->
+  <div class="status-bar">
+    <div class="status-item">
+      <span class="dot green"></span>
+      <span>Registry: Active</span>
+    </div>
+    <div class="status-item">
+      <span class="dot green"></span>
+      <span>Loop Calibrator: Live — Free</span>
+    </div>
+    <div class="status-item">
+      <span class="dot yellow"></span>
+      <span>LoopVault: Beta — Founding Members</span>
+    </div>
+    <div class="status-item">
+      <span class="dot gray"></span>
+      <span>Manual Parser: Coming Month 2</span>
+    </div>
+    <div class="status-item">
+      <span class="dot gray"></span>
+      <span>Agent Wizard: Coming Month 3</span>
+    </div>
+    <div class="status-item">
+      <span class="dot green"></span>
+      <span>registry.relayforge.tools — Pending</span>
+    </div>
+  </div>
+ 
+  <!-- PROBLEM -->
+  <section>
+    <p class="section-label">The Problem</p>
+    <div class="problem-block">
+      <p>The agent economy is <strong>exploding.</strong></p>
+      <p class="dim">Nobody knows which tools are safe to run.</p>
+      <p class="dim">Moltbook just got acquired by Meta — <strong>the trust layer is still unsolved.</strong></p>
+    </div>
+  </section>
+ 
+  <hr class="divider" />
+ 
+  <!-- TRUST CRITERIA -->
+  <section id="criteria">
+    <p class="section-label">Verification Standard</p>
+    <h2 style="font-family: 'Bebas Neue', sans-serif; font-size: clamp(2rem, 5vw, 3.5rem); margin-bottom: 0.75rem; letter-spacing: 0.04em;">
+      Five Criteria.<br>No Exceptions.
+    </h2>
+    <p style="color: var(--text-dim); margin-bottom: 2.5rem; max-width: 540px;">
+      Every tool in the RelayForge registry is evaluated against the same public rubric.
+      No black-box scoring. No pay-to-play. This is the standard.
+    </p>
+ 
+    <div class="criteria-grid">
+      <div class="criterion">
+        <div class="criterion-number">1</div>
+        <div class="criterion-content">
+          <div class="criterion-title">Classification</div>
+          <div class="criterion-desc">Scope is defined. Limits are documented. You know exactly what this tool can and cannot touch before it runs.</div>
         </div>
-        <div class="metric">
-          <strong>Last audit</strong>
-          <div>2026-03-01</div>
+      </div>
+      <div class="criterion">
+        <div class="criterion-number">2</div>
+        <div class="criterion-content">
+          <div class="criterion-title">Developer Accountability</div>
+          <div class="criterion-desc">Named. Reachable. Stands behind it. Anonymous tools don't get verified. Someone's name is on the work.</div>
         </div>
-        <div class="metric">
-          <strong>Median latency</strong>
-          <div>420 ms</div>
+      </div>
+      <div class="criterion">
+        <div class="criterion-number">3</div>
+        <div class="criterion-content">
+          <div class="criterion-title">Test Documentation</div>
+          <div class="criterion-desc">Show the work, not just the result. Passing tests are the floor. We want to see what you tested and why.</div>
         </div>
-        <div class="metric">
-          <strong>Success rate</strong>
-          <div>98.3%</div>
+      </div>
+      <div class="criterion">
+        <div class="criterion-number">4</div>
+        <div class="criterion-content">
+          <div class="criterion-title">Independent Validation</div>
+          <div class="criterion-desc">At least one set of eyes that isn't the builder's. Peer review isn't optional — it's how trust transfers.</div>
         </div>
-        <div class="metric">
-          <strong>Sandbox</strong>
-          <div>Available</div>
-        </div>
-        <div class="metric">
-          <strong>Permissions</strong>
-          <div>Read-only</div>
+      </div>
+      <div class="criterion">
+        <div class="criterion-number">5</div>
+        <div class="criterion-content">
+          <div class="criterion-title">Usability Threshold</div>
+          <div class="criterion-desc">A non-technical user can operate it without breaking something. We call this the iOS test. If it requires a manual, it fails.</div>
         </div>
       </div>
     </div>
+ 
+    <div class="badge-showcase">
+      <div class="rf-badge">
+        <span class="rf-badge-top">◈ RelayForge</span>
+        <span class="rf-badge-main">VERIFIED</span>
+        <span class="rf-badge-bottom">5/5 Criteria · Trust Score A</span>
+      </div>
+      <p class="badge-explanation">
+        <strong>This badge means something.</strong> It means a tool cleared all five criteria,
+        had independent eyes on it, and was scored by agents before it reached yours.
+        Discovery platform, not a warranty — but as close as this space gets to honest signal.
+      </p>
+    </div>
   </section>
+ 
+  <hr class="divider" />
+ 
+  <!-- PRODUCTS -->
+  <section id="products">
+    <p class="section-label">Product Storefront</p>
+    <h2 style="font-family: 'Bebas Neue', sans-serif; font-size: clamp(2rem, 5vw, 3.5rem); margin-bottom: 2.5rem; letter-spacing: 0.04em;">
+      Built for the Field.
+    </h2>
+ 
+    <div class="products-grid">
+      <!-- Loop Calibrator -->
+      <div class="product-card">
+        <div class="product-corner"></div>
+        <div class="product-status live"><span class="dot green"></span> Live — Free</div>
+        <div class="product-name">Loop Calibrator</div>
+        <div class="product-desc">Single-file 5-point calibration calculator for I&E technicians. No login. No friction. Works in the field, on a tablet, offline. The lead magnet that earns the relationship.</div>
+        <div class="product-price free">Free — Always</div>
+        <a href="https://ryan10sa-star.github.io/loop-calibrator-companion-/" class="btn-secondary product-cta" target="_blank" rel="noopener">→ Use Free Tool</a>
+      </div>
+ 
+      <!-- LoopVault -->
+      <div class="product-card">
+        <div class="product-corner"></div>
+        <div class="product-status beta"><span class="dot yellow"></span> Beta — Founding Members</div>
+        <div class="product-name">LoopVault</div>
+        <div class="product-desc">Offline-first PWA for tag management, 5-point calibration jobs, evidence photos, signature capture, PDF cert generation, and cloud sync. Your loop records — finally organized.</div>
+        <div class="product-price">$4/mo founding · $19/mo after</div>
+        <a href="https://cci.lemonsqueezy.com/" class="btn-primary product-cta" target="_blank" rel="noopener">→ Join Beta — $4/mo</a>
+        <p style="font-size: 0.68rem; color: var(--text-muted); text-align: center; margin-top: 0.6rem; font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.06em;">Founding member rate · locked in forever · first 20 only</p>
+      </div>
+ 
+      <!-- Manual Parser -->
+      <div class="product-card">
+        <div class="product-corner"></div>
+        <div class="product-status soon"><span class="dot gray"></span> Coming Soon — Month 2</div>
+        <div class="product-name">Manual Parser</div>
+        <div class="product-desc">Upload a PDF instrument datasheet. AI extracts tag number, range, units, calibration specs — and feeds it directly into LoopVault. The stack of datasheets at project kickoff, handled.</div>
+        <div class="product-price" style="color: var(--text-muted);">Pricing TBD</div>
+      </div>
+ 
+      <!-- Agent Wizard -->
+      <div class="product-card">
+        <div class="product-corner"></div>
+        <div class="product-status soon"><span class="dot gray"></span> Coming Soon — Month 3</div>
+        <div class="product-name">Agent Wizard</div>
+        <div class="product-desc">Plug-and-play onboarding for non-technical users spinning up their first AI agent. Every painful step Ryan took building Sheldon — turned into a guided wizard you can complete in an afternoon.</div>
+        <div class="product-price" style="color: var(--text-muted);">Pricing TBD</div>
+      </div>
+    </div>
+  </section>
+ 
+  <!-- ORIGIN STORY -->
+  <div class="origin-strip" id="about">
+    <div class="origin-inner">
+      <div class="origin-label-block">
+        <div class="section-label" style="margin-bottom: 1.25rem;">Origin</div>
+        <div class="origin-heading">
+          Built by<br>
+          <em>People</em><br>
+          Who Show<br>Up.
+        </div>
+      </div>
+      <div class="origin-text">
+        <p>
+          Built by a <strong>20-year refinery I&E tech and USW union leader</strong> who also built TapTalk AAC —
+          a free communication app now used district-wide for non-verbal kids.
+        </p>
+        <p>
+          We build tools for people who <strong>need</strong> them before we build tools for people who <strong>pay</strong> for them.
+        </p>
+        <p>
+          RelayForge is what happens when someone who's stood next to a valve during commissioning
+          decides to build the <strong>trust layer for AI agents.</strong>
+        </p>
+ 
+        <blockquote>
+          <p>
+            "I would never commission a valve I worked on without standing next to the operator.
+            If he gets hit, I do too — because it was my repair."
+          </p>
+          <cite>— Ryan, Co-Founder · 20-year Refinery I&E Tech</cite>
+        </blockquote>
+      </div>
+    </div>
+  </div>
+ 
+  <!-- WAITLIST -->
+  <div class="waitlist-section" id="waitlist">
+    <div class="section-label" style="justify-content: center;">Early Access</div>
+    <h2>Get in Before the Doors Open.</h2>
+    <p>Founding member pricing. First access to the registry. Built-in feedback loop to shape what we ship next.</p>
+ 
+    <form class="waitlist-form" onsubmit="handleWaitlist(event)">
+      <input type="email" id="email-input" placeholder="your@email.com" required autocomplete="email" />
+      <button type="submit">Join Waitlist</button>
+    </form>
+    <p class="waitlist-note">No spam. No noise. One email when we're ready for you.</p>
+  </div>
+ 
+  <!-- SUBMIT A TOOL -->
+  <section id="submit" style="padding-top: 0; text-align: center;">
+    <hr class="divider" style="margin-bottom: 3rem;" />
+    <div class="section-label" style="justify-content: center;">Registry Submission</div>
+    <h2 style="font-family: 'Bebas Neue', sans-serif; font-size: clamp(2rem, 5vw, 3rem); margin-bottom: 1rem; letter-spacing: 0.04em;">Built a tool that clears the bar?</h2>
+    <p style="color: var(--text-dim); margin-bottom: 2rem; max-width: 480px; margin-left: auto; margin-right: auto;">
+      Submit against the five criteria. We review everything. If it passes, it carries the badge.
+    </p>
+    <a href="https://github.com/ryan10sa-star/RelayForge" class="btn-secondary" target="_blank" rel="noopener">
+      → View Submission Guide on GitHub
+    </a>
+  </section>
+ 
+  <!-- FOOTER -->
   <footer>
-    © 2026 RelayForge. Trusted MCP tools for agents.
+    <div class="footer-inner">
+      <div class="footer-logo">Relay<span>Forge</span></div>
+      <ul class="footer-links">
+        <li><a href="https://github.com/ryan10sa-star/RelayForge" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="https://www.youtube.com/@CRASHCOURSEINSTRUMENTATION" target="_blank" rel="noopener">YouTube</a></li>
+        <li><a href="https://www.linkedin.com/in/ryan-anderson-2a583a39/" target="_blank" rel="noopener">LinkedIn</a></li>
+        <li><a href="#criteria">Trust Criteria</a></li>
+        <li><a href="#products">Products</a></li>
+        <li><a href="#waitlist">Waitlist</a></li>
+      </ul>
+      <div class="footer-credit">Built by Ryan &amp; Sheldon · © 2026 RelayForge</div>
+    </div>
   </footer>
+ 
+  <script>
+    async function handleWaitlist(e) {
+      e.preventDefault();
+      const input = document.getElementById('email-input');
+      const btn = e.target.querySelector('button');
+      const email = input.value.trim();
+      if (!email) return;
+ 
+      btn.textContent = 'Sending...';
+      btn.disabled = true;
+ 
+      const res = await fetch('https://formspree.io/f/xlgpwrzp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ email })
+      });
+ 
+      if (res.ok) {
+        btn.textContent = '✓ You\'re in';
+        btn.style.background = 'var(--green)';
+        input.disabled = true;
+      } else {
+        btn.textContent = 'Try again';
+        btn.disabled = false;
+        btn.style.background = 'var(--red)';
+      }
+    }
+  </script>
+ 
 </body>
 </html>
+ 
