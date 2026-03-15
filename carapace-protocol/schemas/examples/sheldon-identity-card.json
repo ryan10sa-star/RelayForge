@@ -1,0 +1,170 @@
+{
+  "schema_version": "0.1.0",
+  "agent_id": "a1b2c3d4-5678-9abc-def0-1234567890ab",
+  "agent_name": "Sheldon",
+  "description": "RelayForge code review and diagnostic agent. Reviews code for bugs, security issues, and adherence to project standards. Assists with loop diagnostics and industrial manual parsing.",
+  "protocol_version": "0.1.0",
+  "owner": {
+    "owner_id": "github:ryan10sa-star",
+    "display_name": "RelayForge Team",
+    "contact": "team@relayforge.tools",
+    "verified": true
+  },
+  "capabilities": [
+    {
+      "capability_id": "code_review",
+      "name": "Code Review",
+      "description": "Reviews code for bugs, security issues, performance problems, and adherence to project standards.",
+      "tags": ["code", "review", "security", "quality"],
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "code": { "type": "string" },
+          "language": { "type": "string" },
+          "review_focus": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        },
+        "required": ["code"]
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "findings": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "severity": { "type": "string" },
+                "line": { "type": "integer" },
+                "message": { "type": "string" }
+              }
+            }
+          },
+          "summary": { "type": "string" }
+        }
+      },
+      "async_supported": true
+    },
+    {
+      "capability_id": "loop_diagnosis",
+      "name": "Loop Diagnostic Helper",
+      "description": "Diagnoses stuck loops, infinite recursion, and circular dependencies in agent workflows.",
+      "tags": ["diagnostics", "loops", "debugging"],
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "workflow_trace": { "type": "string" },
+          "max_depth": { "type": "integer", "default": 100 }
+        },
+        "required": ["workflow_trace"]
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "loop_detected": { "type": "boolean" },
+          "cycle_path": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "recommendation": { "type": "string" }
+        }
+      },
+      "async_supported": false
+    },
+    {
+      "capability_id": "manual_parse",
+      "name": "Industrial Manual Parser",
+      "description": "Parses industrial equipment manuals (PDF, scanned images) into structured maintenance procedures and part lists.",
+      "tags": ["industrial", "parsing", "manuals", "pdf"],
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "document_url": { "type": "string", "format": "uri" },
+          "document_type": {
+            "type": "string",
+            "enum": ["pdf", "image", "html"]
+          },
+          "extract_fields": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        },
+        "required": ["document_url"]
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string" },
+          "sections": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "heading": { "type": "string" },
+                "content": { "type": "string" }
+              }
+            }
+          },
+          "parts_list": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "part_id": { "type": "string" },
+                "name": { "type": "string" },
+                "quantity": { "type": "integer" }
+              }
+            }
+          }
+        }
+      },
+      "async_supported": true
+    }
+  ],
+  "endpoints": [
+    {
+      "url": "https://api.relayforge.tools/agents/sheldon",
+      "protocol": "https",
+      "authentication": {
+        "type": "bearer"
+      }
+    },
+    {
+      "url": "https://api.relayforge.tools/agents/sheldon/a2a",
+      "protocol": "a2a",
+      "authentication": {
+        "type": "bearer"
+      }
+    }
+  ],
+  "verification": {
+    "algorithm": "Ed25519",
+    "public_key": "MCowBQYDK2VwAyEAExamplePublicKeyBase64urlEncoded_placeholder",
+    "key_id": "relayforge-team-key-2026-03",
+    "signature": "ExampleSignatureBase64urlEncoded_placeholder_this_would_be_a_real_64_byte_signature",
+    "signed_at": "2026-03-15T10:00:00Z"
+  },
+  "registry": {
+    "node_id": "relayforge-primary",
+    "registered_at": "2026-03-15T10:01:00Z",
+    "last_verified_at": "2026-03-15T10:01:00Z",
+    "federation_peers": []
+  },
+  "chain_anchors": [],
+  "heartbeat": {
+    "interval_seconds": 300,
+    "last_seen": "2026-03-15T11:00:00Z"
+  },
+  "reputation": null,
+  "status": "active",
+  "well_known_uri": "https://relayforge.tools/.well-known/agents/a1b2c3d4-5678-9abc-def0-1234567890ab.json",
+  "metadata": {
+    "framework": "relayforge",
+    "deployment": "cloud",
+    "region": "us-east-1"
+  },
+  "created_at": "2026-03-15T10:00:00Z",
+  "updated_at": "2026-03-15T10:00:00Z"
+}
