@@ -81,4 +81,4 @@ This is a v0.1.0 draft. The schema, signing flow, and compatibility mappings are
 
 ## License
 
-See the root repository [README](../README.md) for license information.
+This specification is licensed under the Creative Commons Attribution 4.0 International License ([CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)).
