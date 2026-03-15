@@ -158,6 +158,20 @@
     }
     .btn-secondary:hover { border-color: var(--yellow); color: var(--yellow); }
 
+    .product-desc-section { background: var(--bg-2); border: 1px solid var(--border); border-top: none; max-width: 1100px; margin: 0 auto; }
+    .product-desc-toggle { width: 100%; background: none; border: none; padding: 1.25rem 2rem; display: flex; align-items: center; justify-content: space-between; cursor: pointer; font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-dim); transition: color 0.2s; }
+    .product-desc-toggle:hover { color: var(--yellow); }
+    .product-desc-toggle .arrow { transition: transform 0.25s; }
+    .product-desc-toggle.open .arrow { transform: rotate(180deg); }
+    .product-desc-body { display: none; padding: 0 2rem 2rem; border-top: 1px solid var(--border); }
+    .product-desc-body.open { display: block; }
+    .product-desc-body h4 { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--yellow); margin: 1.75rem 0 0.75rem; }
+    .product-desc-body p { font-size: 0.9rem; color: var(--text-dim); line-height: 1.75; margin-bottom: 0.75rem; max-width: 760px; }
+    .product-desc-body ul { list-style: none; padding: 0; margin: 0 0 0.5rem; }
+    .product-desc-body ul li { font-size: 0.88rem; color: var(--text-dim); line-height: 1.7; padding: 0.2rem 0 0.2rem 1.25rem; position: relative; max-width: 760px; }
+    .product-desc-body ul li::before { content: '→'; position: absolute; left: 0; color: var(--yellow); font-size: 0.75rem; }
+    .product-desc-body .founding-note { margin-top: 1.75rem; padding: 1rem 1.5rem; border: 1px solid var(--border-bright); border-left: 3px solid var(--yellow); font-size: 0.88rem; color: var(--text); line-height: 1.7; }
+
     .featured-features { list-style: none; }
     .featured-features li {
       display: flex; align-items: flex-start; gap: 0.75rem;
@@ -316,6 +330,7 @@
         <div class="featured-price">$4 / month</div>
         <div class="featured-price-note">Founding member rate · First 20 only · Locked in forever · $19/mo after</div>
         <a href="https://cci.lemonsqueezy.com/checkout/buy/b1b9ca27-96e6-41a0-8945-a0983d095044" class="btn-primary" target="_blank" rel="noopener">→ Join Beta — $4/mo</a>
+        <a href="/LoopVault-Spec-Sheet.pdf" class="btn-secondary" target="_blank" rel="noopener" style="margin-top:0.75rem; display:inline-flex; align-items:center; gap:0.5rem;">→ Download Spec Sheet (PDF)</a>
       </div>
       <ul class="featured-features">
         <li>Offline-first PWA — works without network</li>
@@ -329,6 +344,67 @@
       </ul>
     </div>
   </section>
+
+  <!-- LOOPVAULT FULL DESCRIPTION -->
+  <div class="product-desc-section">
+    <button class="product-desc-toggle" onclick="toggleDesc(this)" aria-expanded="false">
+      <span>Full Product Description — What LoopVault Does</span>
+      <span class="arrow">▼</span>
+    </button>
+    <div class="product-desc-body">
+      <p><strong style="color:var(--text)">One tech imports the tag list. Every tech on the crew has it instantly.</strong></p>
+      <p>Lead tech imports the master tag CSV before the turnaround starts. Every tech on the crew installs LoopVault on their tablet, enters the site code, and they're all working from the same tag library — offline, in the field, without a network call.</p>
+      <p>When they're back on network, completed jobs sync to the cloud. Supervisor pulls from the same site code and sees everything the crew has done. No emailed spreadsheets. No paper forms. No chasing techs for their records at job end.</p>
+      <p>Built by a working I&E tech. Not a software company that's never seen a P&ID.</p>
+
+      <h4>Tag Management</h4>
+      <ul>
+        <li>Import your master tag list from CSV — entire unit or area scope loaded in one shot</li>
+        <li>Fast local search and filtered navigation — find any tag instantly, offline</li>
+        <li>QR code scanning — scan existing tags in the field or create missing tags from scanned values</li>
+        <li>Per-tag document vault — store loop sheets, P&IDs, datasheets, and manuals offline on device</li>
+      </ul>
+
+      <h4>Calibration & Loop Check Jobs</h4>
+      <ul>
+        <li>5-point calibration jobs with as-found and as-left entry</li>
+        <li>Multiple calibration contexts: Maintenance/T-A, New Construction, Right Out Of Box, Commissioning</li>
+        <li>DP flow jobs include square-root extraction confirmation (transmitter, control system, legacy extractor, or N/A)</li>
+        <li>Inspection checklist-driven execution — steps can't be skipped</li>
+        <li>Calibration acceptance math built in: linear and square-root transfer functions, pass/fail against max error</li>
+      </ul>
+
+      <h4>Evidence & Documentation</h4>
+      <ul>
+        <li>Photo evidence capture from device camera or gallery</li>
+        <li>Signature capture for turnover records</li>
+        <li>PDF calibration certificate generation on device — no internet required</li>
+        <li>BYOF (Bring Your Own Form) AcroForm fill — upload your company's PDF form, LoopVault fills the fields</li>
+        <li>Shift handover notes template built in — loop package continuity across crew changes</li>
+      </ul>
+
+      <h4>Sync & Backup</h4>
+      <ul>
+        <li>Offline-first — all data stored locally in IndexedDB, survives network loss</li>
+        <li>Cloud sync via shared site code — techs sync to supervisor without shared logins</li>
+        <li>Each facility gets its own site code — data never bleeds between plants</li>
+        <li>ZIP backup and restore — full data portability, store backups anywhere</li>
+        <li>Installs direct from browser as a PWA — no app store, no IT approval needed</li>
+      </ul>
+
+      <h4>Who This Is For</h4>
+      <ul>
+        <li>The I&E tech on a turnaround who's tired of emailing himself spreadsheets</li>
+        <li>The contractor who needs calibration certs that don't look like Excel from 1998</li>
+        <li>The maintenance supervisor who wants their crew synced without enterprise software</li>
+        <li>The commissioning engineer who needs as-found/as-left documentation that holds up to audit</li>
+      </ul>
+
+      <div class="founding-note">
+        <strong>Founding Member Pricing — First 20 Only:</strong> Lock in $4/month forever. After the first 20 founding members, the price goes to $19/month. This rate is locked in permanently for early adopters. Questions? Email <a href="mailto:ryan@relayforge.tools" style="color:var(--yellow)">ryan@relayforge.tools</a>
+      </div>
+    </div>
+  </div>
 
   <hr class="divider" />
 
@@ -460,7 +536,7 @@
         <div class="group-tier-desc">Unlimited techs. One facility. Full sync.</div>
       </div>
     </div>
-    <a href="mailto:ryan@relayforge.tools" class="btn-secondary">→ Contact for Group Pricing</a>
+    <a href="/cdn-cgi/l/email-protection#dfada6beb19fadbab3bea6b9b0adb8baf1abb0b0b3ac" class="btn-secondary">→ Contact for Group Pricing</a>
   </div>
 
   <footer>
@@ -472,9 +548,14 @@
         <li><a href="https://www.youtube.com/@CRASHCOURSEINSTRUMENTATION" target="_blank" rel="noopener">YouTube</a></li>
         <li><a href="https://www.linkedin.com/in/ryan-anderson-2a583a39/" target="_blank" rel="noopener">LinkedIn</a></li>
       </ul>
-      <div class="footer-credit">Built by Ryan &amp; Sheldon · © 2026 RelayForge</div>
-    </div>
-  </footer>
-
+      <div class="footer-credit">Built by Ryan &amp; Sheldon · © 2026 RelayForge</d
+<script>
+function toggleDesc(btn) {
+  btn.classList.toggle("open");
+  const body = btn.nextElementSibling;
+  body.classList.toggle("open");
+  btn.setAttribute("aria-expanded", body.classList.contains("open"));
+}
+</script>
 </body>
 </html>
