@@ -7,7 +7,7 @@
 
 ## What Is Carapace?
 
-Carapace is an open identity and trust protocol for autonomous AI agents. It gives every agent a cryptographically signed **identity card** — a machine-readable badge that proves who the agent is, who owns it, what it can do, and whether it should be trusted.
+Carapace is an open identity and trust protocol for autonomous AI agents. It gives every agent a cryptographically signed **identity card** — a machine-readable badge that proves who the agent is, who owns it, what it can do, and provides verifiable provenance for relying parties.
 
 Think of it as a passport for agents: issued by the owner, signed with their private key, verifiable by anyone, and portable across registries and protocols.
 
