@@ -11,6 +11,9 @@ Carapace is an open identity and trust protocol for autonomous AI agents. It giv
 
 Think of it as a passport for agents: issued by the owner, signed with their private key, verifiable by anyone, and portable across registries and protocols.
 
+> "A registry alone is cloneable. A protocol alone is ignorable. But a portable trust envelope tied to a respected verification registry — now you're cooking."
+
+
 ---
 
 ## Core Concepts
