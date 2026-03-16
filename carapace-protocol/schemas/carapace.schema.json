@@ -1,0 +1,543 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://carapace.protocol/schemas/v0.1.0/carapace.schema.json",
+  "title": "Carapace Protocol — Schema Bundle v0.1.0",
+  "$defs": {
+
+    "AgentIdentityCard": {
+      "$id": "#AgentIdentityCard",
+      "title": "Agent Identity Card",
+      "description": "The canonical trust envelope. Self-contained, cryptographically signed, portable.",
+      "type": "object",
+      "required": [
+        "schema_version",
+        "agent_id",
+        "agent_name",
+        "owner",
+        "declared_capabilities",
+        "issued_at",
+        "signature"
+      ],
+      "additionalProperties": false,
+      "properties": {
+
+        "schema_version": {
+          "type": "string",
+          "const": "0.1.0"
+        },
+
+        "agent_id": {
+          "type": "string",
+          "description": "Globally unique agent identifier. Recommended: did:key or did:web.",
+          "examples": ["did:key:z6MkpTHR8VNsBxYAAWHut2Geadd9jSwuias8sisDArDJF6"]
+        },
+
+        "agent_name": {
+          "type": "string",
+          "maxLength": 128
+        },
+
+        "description": {
+          "type": "string",
+          "maxLength": 1024
+        },
+
+        "status": {
+          "type": "string",
+          "enum": ["active", "suspended", "revoked", "draft"],
+          "default": "active"
+        },
+
+        "owner": {
+          "$ref": "#OwnerBlock"
+        },
+
+        "declared_capabilities": {
+          "type": "array",
+          "description": "Capabilities declared by the agent owner. Self-signed.",
+          "items": { "$ref": "#DeclaredCapability" },
+          "minItems": 0
+        },
+
+        "attestations": {
+          "type": "array",
+          "description": "URIs pointing to standalone Attestation documents. Registries attach these without rewriting the core card.",
+          "items": {
+            "type": "object",
+            "required": ["attestation_id", "uri"],
+            "properties": {
+              "attestation_id": { "type": "string" },
+              "uri": { "type": "string", "format": "uri" },
+              "digest": {
+                "type": "string",
+                "description": "SHA-256 hash of the attestation document for local verification."
+              }
+            }
+          }
+        },
+
+        "endpoints": {
+          "type": "array",
+          "items": { "$ref": "#Endpoint" }
+        },
+
+        "registry": {
+          "type": "object",
+          "description": "Registry metadata — populated by the registry, not the owner.",
+          "properties": {
+            "registry_id": { "type": "string" },
+            "registered_at": { "type": "string", "format": "date-time" },
+            "last_seen": { "type": "string", "format": "date-time" },
+            "registry_signature": { "type": "string" }
+          }
+        },
+
+        "metadata": {
+          "type": "object",
+          "description": "Extensible key-value store for framework-specific or custom fields.",
+          "additionalProperties": true
+        },
+
+        "issued_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+
+        "expires_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+
+        "signature": {
+          "$ref": "#Signature"
+        }
+      }
+    },
+
+    "OwnerBlock": {
+      "$id": "#OwnerBlock",
+      "title": "Owner Verification Block",
+      "description": "Owner identity claim + verification proof. Lives in the identity card.",
+      "type": "object",
+      "required": ["owner_id", "owner_claim", "owner_public_key", "verification_method"],
+      "additionalProperties": false,
+      "properties": {
+
+        "owner_id": {
+          "type": "string",
+          "description": "Namespaced owner identifier.",
+          "examples": [
+            "email:ryan@relayforge.dev",
+            "github:ryananderson",
+            "did:web:relayforge.dev"
+          ]
+        },
+
+        "owner_claim": {
+          "type": "string",
+          "description": "Human-readable ownership claim.",
+          "examples": ["Ryan Anderson / Crash Course Instrumentation"]
+        },
+
+        "owner_public_key": {
+          "type": "string",
+          "description": "Base64url-encoded Ed25519 public key used to verify the owner's signatures."
+        },
+
+        "verification_method": {
+          "type": "string",
+          "enum": [
+            "dns_txt",
+            "github_org",
+            "wallet_sig",
+            "manual_kyc",
+            "email_otp",
+            "did_auth",
+            "self_signed"
+          ],
+          "description": "How the owner claim was verified."
+        },
+
+        "verification_evidence": {
+          "type": "string",
+          "description": "URI or hash referencing the proof artifact (DNS record, GitHub commit, KYC doc hash, etc.).",
+          "format": "uri"
+        },
+
+        "verified_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+
+        "verifier": {
+          "type": "string",
+          "description": "Who performed the verification check. Can be self or a registry/third party.",
+          "examples": ["relayforge.dev", "self"]
+        }
+      }
+    },
+
+    "DeclaredCapability": {
+      "$id": "#DeclaredCapability",
+      "title": "Declared Capability",
+      "description": "A capability declared by the agent owner. Self-signed. Verified separately via Attestation objects.",
+      "type": "object",
+      "required": ["id", "name", "release_version", "last_updated", "signature"],
+      "additionalProperties": false,
+      "properties": {
+
+        "id": {
+          "type": "string",
+          "description": "Stable, unique capability identifier within this agent.",
+          "examples": ["cap:prompt-injection-detection", "cap:structured-extraction-v2"]
+        },
+
+        "name": {
+          "type": "string",
+          "maxLength": 128
+        },
+
+        "description": {
+          "type": "string",
+          "maxLength": 1024
+        },
+
+        "tags": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+
+        "input_schema": {
+          "type": "object",
+          "description": "JSON Schema (by value) or $ref URI describing the expected input.",
+          "properties": {
+            "$ref": { "type": "string", "format": "uri" }
+          },
+          "additionalProperties": true
+        },
+
+        "output_schema": {
+          "type": "object",
+          "description": "JSON Schema (by value) or $ref URI describing the output.",
+          "properties": {
+            "$ref": { "type": "string", "format": "uri" }
+          },
+          "additionalProperties": true
+        },
+
+        "release_version": {
+          "type": "string",
+          "description": "Semver string for this capability version.",
+          "pattern": "^\\d+\\.\\d+\\.\\d+(-[a-zA-Z0-9.]+)?$",
+          "examples": ["1.0.0", "0.3.1-beta"]
+        },
+
+        "evidence_pointer": {
+          "type": "string",
+          "description": "Optional URI pointing to test artifacts, benchmarks, or documentation supporting this declaration.",
+          "format": "uri"
+        },
+
+        "async_supported": {
+          "type": "boolean",
+          "default": false
+        },
+
+        "last_updated": {
+          "type": "string",
+          "format": "date-time"
+        },
+
+        "signature": {
+          "$ref": "#Signature"
+        }
+      }
+    },
+
+    "VerifiedCapability": {
+      "$id": "#VerifiedCapability",
+      "title": "Verified Capability",
+      "description": "An evaluator or registry's assessment of a declared capability. Owned by the evaluator, not the agent owner. Attached via attestation reference — does not rewrite the core card.",
+      "type": "object",
+      "required": [
+        "capability_id",
+        "agent_id",
+        "evaluator_id",
+        "evaluation_method",
+        "environment",
+        "result",
+        "evaluated_at",
+        "signature"
+      ],
+      "additionalProperties": false,
+      "properties": {
+
+        "capability_id": {
+          "type": "string",
+          "description": "References DeclaredCapability.id on the target agent."
+        },
+
+        "agent_id": {
+          "type": "string",
+          "description": "The agent whose capability is being verified."
+        },
+
+        "evaluator_id": {
+          "type": "string",
+          "description": "Identifier of the registry or evaluator performing the check.",
+          "examples": ["relayforge.dev", "did:web:eval.sctc.org"]
+        },
+
+        "evaluation_method": {
+          "type": "string",
+          "description": "The test suite or evaluation protocol used.",
+          "examples": ["SCTC-prompt-suite-v1.2", "manual-red-team", "automated-regression"]
+        },
+
+        "environment": {
+          "type": "string",
+          "enum": ["simulation", "production", "staging", "sandbox"],
+          "description": "Where the evaluation was conducted."
+        },
+
+        "result": {
+          "type": "string",
+          "enum": ["pass", "fail", "degraded", "inconclusive"]
+        },
+
+        "result_detail": {
+          "type": "string",
+          "description": "Optional human-readable summary of the result.",
+          "maxLength": 512
+        },
+
+        "evidence_uri": {
+          "type": "string",
+          "description": "URI to logs, test reports, or artifacts from the evaluation.",
+          "format": "uri"
+        },
+
+        "evaluated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+
+        "expires_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+
+        "signature": {
+          "$ref": "#Signature"
+        }
+      }
+    },
+
+    "Attestation": {
+      "$id": "#Attestation",
+      "title": "Attestation",
+      "description": "A standalone signed document issued by a registry or evaluator. Agents link to these by URI+hash. Registries attach them without touching the core identity card.",
+      "type": "object",
+      "required": [
+        "attestation_id",
+        "attestor",
+        "subject",
+        "claims",
+        "issued_at",
+        "signature"
+      ],
+      "additionalProperties": false,
+      "properties": {
+
+        "attestation_id": {
+          "type": "string",
+          "description": "Globally unique identifier for this attestation document.",
+          "examples": ["att:relayforge:2026-03-15:sheldon:cap001"]
+        },
+
+        "attestor": {
+          "type": "object",
+          "required": ["id", "name", "public_key"],
+          "additionalProperties": false,
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Stable identifier of the attesting registry or evaluator.",
+              "examples": ["did:web:relayforge.dev", "relayforge.dev"]
+            },
+            "name": {
+              "type": "string",
+              "examples": ["RelayForge Registry"]
+            },
+            "public_key": {
+              "type": "string",
+              "description": "Base64url-encoded Ed25519 public key of the attestor."
+            },
+            "url": {
+              "type": "string",
+              "format": "uri"
+            }
+          }
+        },
+
+        "subject": {
+          "type": "object",
+          "required": ["agent_id"],
+          "additionalProperties": false,
+          "properties": {
+            "agent_id": {
+              "type": "string",
+              "description": "The agent this attestation is about."
+            },
+            "capability_id": {
+              "type": "string",
+              "description": "If scoped to a specific capability, reference it here. Omit for agent-level attestations."
+            }
+          }
+        },
+
+        "claims": {
+          "type": "array",
+          "description": "Array of factual claims made by the attestor about the subject.",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["claim_type", "value"],
+            "additionalProperties": false,
+            "properties": {
+              "claim_type": {
+                "type": "string",
+                "description": "Namespaced claim type.",
+                "examples": [
+                  "capability.evaluation",
+                  "owner.verification",
+                  "uptime.sla",
+                  "security.audit"
+                ]
+              },
+              "value": {
+                "description": "The claim value. String, boolean, or object depending on claim_type.",
+                "oneOf": [
+                  { "type": "string" },
+                  { "type": "boolean" },
+                  { "type": "number" },
+                  { "type": "object" }
+                ],
+                "examples": [
+                  "passes SCTC prompt suite v1.2",
+                  true,
+                  { "result": "pass", "score": 0.97 }
+                ]
+              },
+              "context": {
+                "type": "string",
+                "description": "Optional URI to a spec or definition document for this claim type.",
+                "format": "uri"
+              }
+            }
+          }
+        },
+
+        "evidence": {
+          "type": "array",
+          "description": "URIs and/or content hashes of logs, reports, or test artifacts supporting these claims.",
+          "items": {
+            "type": "object",
+            "required": ["uri"],
+            "additionalProperties": false,
+            "properties": {
+              "uri": { "type": "string", "format": "uri" },
+              "digest": {
+                "type": "string",
+                "description": "SHA-256 hex digest of the evidence artifact."
+              },
+              "media_type": {
+                "type": "string",
+                "examples": ["application/json", "text/html", "application/pdf"]
+              }
+            }
+          }
+        },
+
+        "issued_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+
+        "expires_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+
+        "signature": {
+          "$ref": "#Signature"
+        }
+      }
+    },
+
+    "Endpoint": {
+      "$id": "#Endpoint",
+      "type": "object",
+      "required": ["url", "protocol"],
+      "additionalProperties": false,
+      "properties": {
+        "url": { "type": "string", "format": "uri" },
+        "protocol": {
+          "type": "string",
+          "enum": ["a2a", "mcp", "openclaw", "rest", "grpc", "websocket"]
+        },
+        "authentication": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["none", "bearer", "api_key", "oauth2", "mtls"]
+            },
+            "details": { "type": "object", "additionalProperties": true }
+          }
+        }
+      }
+    },
+
+    "Signature": {
+      "$id": "#Signature",
+      "title": "Cryptographic Signature Block",
+      "description": "Ed25519 signature over the canonical JCS serialization of the parent object.",
+      "type": "object",
+      "required": ["algorithm", "public_key", "value", "signed_at"],
+      "additionalProperties": false,
+      "properties": {
+        "algorithm": {
+          "type": "string",
+          "const": "Ed25519",
+          "description": "Only Ed25519 over JCS is supported in v0.1.0."
+        },
+        "public_key": {
+          "type": "string",
+          "description": "Base64url-encoded Ed25519 public key of the signer."
+        },
+        "value": {
+          "type": "string",
+          "description": "Base64url-encoded signature bytes."
+        },
+        "signed_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "canonicalization": {
+          "type": "string",
+          "const": "JCS",
+          "description": "JSON Canonicalization Scheme (RFC 8785). Required for deterministic verification."
+        }
+      }
+    }
+
+  },
+
+  "description": "Top-level schema bundle. Import individual $defs by $id reference.",
+  "oneOf": [
+    { "$ref": "#AgentIdentityCard" },
+    { "$ref": "#Attestation" },
+    { "$ref": "#VerifiedCapability" }
+  ]
+}
